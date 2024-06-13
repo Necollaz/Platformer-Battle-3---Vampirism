@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
 public class VampirismDetected : MonoBehaviour
 {
     private List<Enemy> _enemyDetected = new List<Enemy>();

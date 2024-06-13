@@ -13,21 +13,20 @@ public class Health : MonoBehaviour
         _currentHealth = _maxHealth;
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         _currentHealth -= amount;
 
-        if (_currentHealth < 0)
+        if (_currentHealth <= 0)
         {
             _currentHealth = 0;
             Destroy(gameObject);
-            return;
         }
 
         HealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
         _currentHealth += amount;
 

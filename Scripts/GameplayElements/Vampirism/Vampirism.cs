@@ -68,8 +68,8 @@ public class Vampirism : MonoBehaviour
         {
             float drainAmount = _drainRate * Time.deltaTime;
 
-            enemyHealth.TakeDamage((int)drainAmount);
-            _playerHealth.Heal((int)drainAmount);
+            enemyHealth.TakeDamage(drainAmount);
+            _playerHealth.Heal(drainAmount);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

@@ -27,4 +27,9 @@ public class EnemyAnimationController : MonoBehaviour
     {
         _animator.SetTrigger(EnemyAnimationData.Params.Attack);
     }
+
+    public bool IsAttacking()
+    {
+        return _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
+    }
 }
