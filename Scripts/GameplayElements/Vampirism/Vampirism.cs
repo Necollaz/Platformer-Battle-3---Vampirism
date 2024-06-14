@@ -9,14 +9,15 @@ public class Vampirism : MonoBehaviour
     [SerializeField] private float _duration = 6f;
     [SerializeField] private float _drainRate = 10f;
 
-    private Health _playerHealth;
+    private Health _health;
+    private Enemy _currentTarget;
     private Coroutine _coroutine;
 
     public float Radius => _radius;
 
     private void Awake()
     {
-        _playerHealth = GetComponent<Health>();
+        _health = GetComponent<Health>();
     }
 
     private void Update()
@@ -58,6 +59,7 @@ public class Vampirism : MonoBehaviour
 
     private IEnumerator VampirismAbility(Enemy targetEnemy)
     {
+        _currentTarget = targetEnemy;
         Health enemyHealth = targetEnemy.GetComponent<Health>();
 
         if (enemyHealth == null) yield break;
@@ -66,14 +68,40 @@ public class Vampirism : MonoBehaviour
 
         while(elapsedTime < _duration)
         {
+            if(_currentTarget == null)
+            {
+                Enemy nearestEnemy = GetNearestEnemy();
+
+                if(nearestEnemy != null)
+                {
+                    _currentTarget = nearestEnemy;
+                    enemyHealth = nearestEnemy.GetComponent<Health>();
+
+                    if (enemyHealth == null) break;
+
+                    enemyHealth.OnDeath += HandleTargetDeath;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             float drainAmount = _drainRate * Time.deltaTime;
 
-            enemyHealth.TakeDamage(drainAmount);
-            _playerHealth.Heal(drainAmount);
+            _currentTarget.GetComponent<Health>().TakeDamage(drainAmount);
+            _health.Heal(drainAmount);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         _coroutine = null;
     }
+
+    private void HandleTargetDeath(Health targetHealth)
+    {
+        targetHealth.OnDeath -= HandleTargetDeath; 
+        _currentTarget = null; 
+    }
+
 }

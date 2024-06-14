@@ -7,6 +7,7 @@ public class Health : MonoBehaviour
     private float _currentHealth;
 
     public event Action<float, float> HealthChanged;
+    public event Action<Health> OnDeath;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class Health : MonoBehaviour
         if (_currentHealth <= 0)
         {
             _currentHealth = 0;
+            OnDeath?.Invoke(this);
             Destroy(gameObject);
         }
 
